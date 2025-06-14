@@ -129,7 +129,7 @@ class AnalysisResult(BaseModel):
     trends: List[str]
 
 # LLM Configuration
-llm = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.1, convert_system_message_to_human=True)
+llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.1, convert_system_message_to_human=True)
 output_parser = PydanticOutputParser(pydantic_object=AnalysisResult)
 
 analyze_prompt = PromptTemplate(
@@ -248,13 +248,25 @@ async def get_analytics(current_user: dict = Depends(admin_required)):
         raise HTTPException(status_code=404, detail="No feedback data available")
 
     result = analyze_chain.run(feedback=combined_feedback)
+    logger.info(f"LLM result: {result}")
+    lines = result.split("\n")
     
-    topics, sentiment, trends = result.split("\n")
+    # Extract topics
+    topics_line = next((line for line in lines if "Key topics:" in line), "")
+    topics_str = topics_line.split("Key topics:")[-1].strip().strip("*,")
+    
+    # Extract sentiment
+    sentiment_line = next((line for line in lines if "Sentiment:" in line), "")
+    sentiment_str = sentiment_line.split("Sentiment:")[-1].strip().strip("*,")
+    
+    # Extract trends
+    trends_line = next((line for line in lines if "Emerging trends:" in line), "")
+    trends_str = trends_line.split("Emerging trends:")[-1].strip().strip("*,")
     
     return {
-        "topics": [topic.strip() for topic in topics.split(",")],
-        "sentiment": sentiment.strip(),
-        "trends": [trend.strip() for trend in trends.split(",")]
+        "topics": [topic.strip() for topic in topics_str.split(",") if topic.strip()],
+        "sentiment": sentiment_str,
+        "trends": [trend.strip() for trend in trends_str.split(",") if trend.strip()]
     }
 
 if __name__ == "__main__":

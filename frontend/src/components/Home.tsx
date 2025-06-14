@@ -24,10 +24,10 @@ const PageContainer = styled(Box)(({ theme }) => ({
 }));
 
 const StyledCard = styled(Card)(({ theme }) => ({
-  maxWidth: 600,
+  maxWidth: 800,
   width: '100%',
-  borderRadius: theme.shape.borderRadius * 2,
-  boxShadow: '0 8px 40px rgba(0, 0, 0, 0.12)',
+  borderRadius: theme.shape.borderRadius * 3,
+  boxShadow: '0 12px 48px rgba(0, 0, 0, 0.15)',
   overflow: 'hidden',
 }));
 
@@ -41,14 +41,25 @@ const CardHeader = styled(Box)(({ theme }) => ({
 const AvatarWrapper = styled(Box)(({ theme }) => ({
   marginTop: theme.spacing(-8),
   marginBottom: theme.spacing(2),
+  padding: '4px',  // Consistent with our test
+  background: theme.palette.common.white,
+  borderRadius: '50%',
+  display: 'inline-block',
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'  // Lighter shadow from our test
 }));
 
 const LargeAvatar = styled(Avatar)(({ theme }) => ({
   width: theme.spacing(16),
   height: theme.spacing(16),
-  margin: '0 auto',
-  border: `4px solid ${theme.palette.background.paper}`,
-  boxShadow: '0 3px 5px 2px rgba(0, 0, 0, 0.3)',
+  backgroundColor: '#e0e0e0',
+  color: '#000000',
+  fontSize: '3.5rem',
+  fontWeight: 700,
+  borderRadius: '50%',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  boxShadow: 'none'
 }));
 
 const InfoItem = styled(Box)(({ theme }) => ({
